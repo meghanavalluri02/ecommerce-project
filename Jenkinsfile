@@ -30,8 +30,9 @@ pipeline {
             steps {
                 script {
                     echo "Logging in to Docker Hub..."
-                    withCredentials([string(credentialsId: 'dockerhub-credentials', variable: 'DOCKER_PASSWORD')]) {
-                        sh "echo ${DOCKER_PASSWORD} | docker login -u dockerhub_user --password-stdin"
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) 
+                    {
+                        sh "docker login -u $DOCKER_USER -p $DOCKER_PASS"
                     }
                     echo "Pushing image to Docker Hub..."
                     sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${REGISTRY}:${DOCKER_TAG}"
